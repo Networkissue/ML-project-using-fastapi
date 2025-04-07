@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Iris Flower Predictor</title>
+</head>
+<body>
+    <h2>Iris Flower Prediction</h2>
+    <form action="/predict" method="POST">
+        Sepal Length: <input type="text" name="sepal_length" required><br><br>
+        Sepal Width: <input type="text" name="sepal_width" required><br><br>
+        Petal Length: <input type="text" name="petal_length" required><br><br>
+        Petal Width: <input type="text" name="petal_width" required><br><br>
+        <input type="submit" value="Predict"><br><br>
+        <strong>Class:</strong> {{ result }}
+    </form>
+</body>
+</html>

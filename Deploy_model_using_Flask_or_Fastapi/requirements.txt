@@ -1,0 +1,8 @@
+numpy==1.21.0  # Ensure compatibility with scikit-learn 0.24.2
+scipy==1.7.3   # Recommended version for scikit-learn 0.24.2
+Flask
+scikit-learn==1.0.2
+
+
+
+# Note : py -3.10 -m venv venv310
