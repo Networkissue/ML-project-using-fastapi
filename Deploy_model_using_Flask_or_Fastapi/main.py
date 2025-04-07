@@ -1,3 +1,40 @@
+#fastapi
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+import pickle
+import uvicorn
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+
+# Load your model
+model = pickle.load(open('savedmodel.sav', 'rb'))
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request, "result": ""})
+
+@app.post("/predict", response_class=HTMLResponse)
+async def predict(
+    request: Request,
+    sepal_length: float = Form(...),
+    sepal_width: float = Form(...),
+    petal_length: float = Form(...),
+    petal_width: float = Form(...)
+):
+    prediction = model.predict([[sepal_length, sepal_width, petal_length, petal_width]])
+    result = prediction[0]  # Already a string/class label
+    return templates.TemplateResponse("index.html", {"request": request, "result": result})
+
+# Only needed if you're running the file directly
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+
+
+
+# ---------------------------------------
+#flask
 # from flask import Flask, render_template, request
 # import pickle
 
@@ -33,36 +70,3 @@
 
 # if __name__ == '__main__':
 #     app.run(host='0.0.0.0', port=8080, debug=True)
-
-
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-import pickle
-import uvicorn
-
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-
-# Load your model
-model = pickle.load(open('savedmodel.sav', 'rb'))
-
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "result": ""})
-
-@app.post("/predict", response_class=HTMLResponse)
-async def predict(
-    request: Request,
-    sepal_length: float = Form(...),
-    sepal_width: float = Form(...),
-    petal_length: float = Form(...),
-    petal_width: float = Form(...)
-):
-    prediction = model.predict([[sepal_length, sepal_width, petal_length, petal_width]])
-    result = prediction[0]  # Already a string/class label
-    return templates.TemplateResponse("index.html", {"request": request, "result": result})
-
-# Only needed if you're running the file directly
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
